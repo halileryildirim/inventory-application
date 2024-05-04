@@ -52,8 +52,8 @@ async function gameCreate(
   const gameDetail = {
     name: name,
     description: description,
-    release_year: release_year,
   };
+  if (release_year != false) gameDetail.release_year = release_year;
   if (platform != false) gameDetail.platform = platform;
   if (category != false) gameDetail.category = category;
 
@@ -79,7 +79,7 @@ async function createGames() {
       0,
       "The Amazing Spider-Man",
       "Peter parker is bitten by a radioactive bla bla you're spiderman in this game and swinging in NYC is fun.",
-      2019,
+      "2019-01-01",
       "PlayStation",
       [categories[0], categories[1]]
     ),
@@ -87,7 +87,7 @@ async function createGames() {
       1,
       "The Amazing Spider-Man 2",
       "You're still spider-man  BUT also Miles Morales spider-man and swinging is alot better in this game.",
-      2023,
+      "2023-01-01",
       "PlayStation",
       [categories[0], categories[1]]
     ),
@@ -95,7 +95,7 @@ async function createGames() {
       2,
       "Terraria",
       "You're a 2D pixelated character that starts his adventure starts from killing slimes and ends with killing a literal god.",
-      2012,
+      "2012-01-01",
       "PC",
       [categories[0], categories[1]]
     ),
@@ -103,7 +103,7 @@ async function createGames() {
       3,
       "Fallout 4",
       "Vault dweller sleeps in cryopod for years, and wakes up to avenge his wife and get his baby back. FNV is still better tho.",
-      2015,
+      "2015-01-01",
       "Xbox",
       categories[1]
     ),
@@ -111,7 +111,7 @@ async function createGames() {
       4,
       "Super Mario Bros",
       "Mario tries to save Peach from evil spiked dragon for the 9976th time.",
-      2020,
+      "2020-01-01",
       "Switch",
       categories[2]
     ),
