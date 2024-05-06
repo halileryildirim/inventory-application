@@ -19,7 +19,8 @@ exports.index = asyncHandler(async (req, res, next) => {
 
 // Display list of all Categories.
 exports.game_list = asyncHandler(async (req, res, next) => {
-  const allGames = await Game.find({}, "name platform")
+  // Get list of all games with name and release year.
+  const allGames = await Game.find({}, "name release_year")
     .sort({ name: 1 })
     .exec();
   res.render("layout", {
