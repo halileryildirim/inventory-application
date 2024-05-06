@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
-</html>
+<h1>
+  <%= title %>
+</h1>
+<p>Welcome to <em>Inventory Application</em>, an Inventory app developed as a practice for backend technologies.</p>
+
+<h2>Dynamic Content</h2>
+
+<p>This Inventory has the following counts:</p>
+<ul>
+  <li><strong>Games: <%= game_count %></strong></li>
+  <li><strong>Categories: <%= category_count %></strong></li>
+</ul>

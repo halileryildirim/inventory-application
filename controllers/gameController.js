@@ -1,13 +1,32 @@
 const Game = require("../models/game");
+const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Site Home Page ");
+  // Get details of games, categories in parallel.
+  const [numGames, numCategories] = await Promise.all([
+    Game.countDocuments({}).exec(),
+    Category.countDocuments({}).exec(),
+  ]);
+
+  res.render("layout", {
+    content: "index",
+    title: "Inventory Application",
+    game_count: numGames,
+    category_count: numCategories,
+  });
 });
 
 // Display list of all Categories.
 exports.game_list = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Game List");
+  const allGames = await Game.find({}, "name platform")
+    .sort({ name: 1 })
+    .exec();
+  res.render("layout", {
+    content: "game_list",
+    title: "Game List",
+    game_list: allGames,
+  });
 });
 
 // Display detail for a single Game.
