@@ -1,0 +1,15 @@
+<h1>
+    Game: <%=game.name%>
+</h1>
+
+<p><strong>Platform: </strong><%=game.platform%> </p>
+<p><strong>Release Year: </strong><%=game.release_year_formatted%></p>
+<p><strong>Description: </strong><%=game.description%></p>
+<p><strong>Categories: </strong>
+    <% game.category.forEach((element, index) => { %>
+        <a href="<%=element.url%>"><%=element.name%></a>
+        <% if (index < game.category.length -1) { %>
+            ,&nbsp;
+        <% } %>
+    <%});%>
+</p>

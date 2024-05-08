@@ -24,7 +24,7 @@ GameSchema.virtual("url").get(function () {
 
 // Virtual for game's date format
 GameSchema.virtual("release_year_formatted").get(function () {
-  return DateTime.fromJSDate(this.release_year).toFormat("y"); //fix this
+  return DateTime.fromJSDate(this.release_year).toFormat("y");
 });
 
 // Export model

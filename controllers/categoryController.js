@@ -21,7 +21,7 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
   // Get details of category and all associated games in parallel
   const [category, gamesInCategory] = await Promise.all([
     Category.findById(req.params.id).exec(),
-    Game.find({ category: req.param.id }, "name").exec(),
+    Game.find({ category: req.params.id }, "name description").exec(),
   ]);
 
   if (category === null) {

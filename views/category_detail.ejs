@@ -1,0 +1,23 @@
+<h1>
+    Category: <%=category.name%>
+</h1>
+
+<div style="margin-left: 20px;margin-top: 20px;">
+    <h2 style="font-size: 1.5rem;">Games</h2>
+    <%if(category_games.length) {%>
+        <dl>
+            <% for(let game of category_games) {%>
+                <dt>
+                    <a href="<%=game.url%>">
+                        <%=game.name%>
+                    </a>
+                </dt>
+                <dd>
+                    <%=game.description%>
+                </dd>
+            <% }%>
+        </dl>
+    <%} else {%> 
+        <p>This category has no games.</p>
+    <% } %>
+</div>

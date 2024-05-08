@@ -32,7 +32,20 @@ exports.game_list = asyncHandler(async (req, res, next) => {
 
 // Display detail for a single Game.
 exports.game_detail = asyncHandler(async (req, res, next) => {
-  res.send(`TBA Game: ${req.params.id}`);
+  const game = await Game.findById(req.params.id).populate("category").exec();
+
+  if (game === null) {
+    // No results
+    const err = new Error("Game not found.");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("layout", {
+    content: "game_detail",
+    title: "Game Detail",
+    game: game,
+  });
 });
 
 // Display Game create form on GET.
