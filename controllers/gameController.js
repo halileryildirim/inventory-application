@@ -1,6 +1,7 @@
 const Game = require("../models/game");
 const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
 
 exports.index = asyncHandler(async (req, res, next) => {
   // Get details of games, categories in parallel.
@@ -49,9 +50,9 @@ exports.game_detail = asyncHandler(async (req, res, next) => {
 });
 
 // Display Game create form on GET.
-exports.game_create_get = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Game create GET");
-});
+exports.game_create_get = (req, res, next) => {
+  res.render("layout", { content: "game_form", title: "Create Game" });
+};
 
 // Display Game create form on POST.
 exports.game_create_post = asyncHandler(async (req, res, next) => {
