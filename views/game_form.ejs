@@ -1,0 +1,59 @@
+<h1>
+    <%= title %>
+</h1>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="name">Game: </label>
+        <input id="name" class="form-control" type="text" name="name" placeholder="Name of Game" required value="<%= typeof game === 'undefined' ? '' : game.name%>">
+    </div>
+    <div class="form-group">
+        <label for="description">Description: </label>
+        <textarea id="description" class="form-control" placeholder="Description" name="description" required value="<%= typeof game === 'undefined' ? '' : game.description %>"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="release_year">Release date of Game: </label>
+        <input id="release_year" class="form-control" type="date" name="release_year" required value="<%= typeof game === "undefined" ? "" : game.release_year_formatted %>">
+    </div>
+    <div class="form-group">
+        <label for="platform">Platform: </label>
+        <select name="platform" id="platform" required>
+            <option value="">--Please select a platform--</option>
+            <% ["PC", "Xbox", "PlayStation", "Switch"].forEach(val => {%>
+                <% if (typeof game === 'undefined' || game.platform !== val) {%>
+                    <option value="<%= val %>">
+                        <%= val %>
+                    </option>
+                <%} else {%>
+                    <option value="<%= val %>" selected>
+                        <%= val %>
+                    </option>
+                <% } %>
+            <%});%>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="">Category:</label>
+        <% categories.forEach(category => { %>
+            <div style="display: inline; padding-right: 10px;">
+                <% if (category.checked) { %>
+                    <input class="checkbox-input" type="checkbox" name="category" id="<%= category._id%>" value="<%= category._id%>" checked>
+                <% } else {%>
+                    <input class="checkbox-input" type="checkbox" name="category" id="<%= category._id%>" value="<%= category._id%>">
+                <% } %>
+                <label for="<%= category._id %>">&nbsp;<%= category.name %></label>
+            </div>
+       <% }); %>
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+<% if (typeof errors !=='undefined' && errors.length> 0) { %>
+    <ul>
+        <% errors.forEach(error=> { %>
+            <li>
+                <%= error.msg %>
+            </li>
+            <% }); %>
+    </ul>
+<% } %>

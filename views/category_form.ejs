@@ -7,8 +7,8 @@
         <label for="name">Category: </label>
         <input id="name" class="form-control" type="text" name="name" placeholder="Action, Adventure etc." required
             value="<%= typeof category === 'undefined' ? '' : category.name%>">
-        <button class="btn btn-primary" type="submit" style="margin-top: 8px;">Submit</button>
     </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
 </form>
 
 <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
