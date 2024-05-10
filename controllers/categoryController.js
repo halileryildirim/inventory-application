@@ -93,12 +93,47 @@ exports.category_create_post = [
 
 // Display Category delete form on GET.
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Category delete GET");
+  // Get details of category and all their games in parallel.
+  const [category, gamesInCategory] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Game.find({ category: req.params.id }, "name category").exec(),
+  ]);
+
+  if (category === null) {
+    // No results.
+    res.redirect("/inventory/categories");
+  }
+
+  res.render("layout", {
+    content: "category_delete",
+    title: "Delete Category",
+    category: category,
+    category_games: gamesInCategory,
+  });
 });
 
 // Display Category delete form on POST.
 exports.category_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Category delete POST");
+  // Get details of category and all their games in parallel.
+  const [category, gamesInCategory] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Game.find({ category: req.params.id }, "name description").exec(),
+  ]);
+
+  if (gamesInCategory.length > 0) {
+    // Category has books. Render in same way as for GET route.
+    res.render("layout", {
+      content: "category_delete",
+      title: "Delete Category",
+      category: category,
+      category_games: gamesInCategory,
+    });
+    return;
+  } else {
+    // Category has no games. Delete game and redirect to the list of categories.
+    await Category.findByIdAndDelete(req.body.categoryid);
+    res.redirect("/inventory/categories");
+  }
 });
 
 // Display Category update form on GET.
