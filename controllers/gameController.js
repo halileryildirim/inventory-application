@@ -126,12 +126,28 @@ exports.game_create_post = [
 
 // Display Game delete form on GET.
 exports.game_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Game delete GET");
+  //Get details of game.
+  const game = await Game.findById(req.params.id).exec();
+
+  if (game === null) {
+    // No results.
+    res.redirect("/inventory/games");
+  }
+  res.render("layout", {
+    content: "game_delete",
+    title: "Delete Game",
+    game: game,
+  });
 });
 
 // Display Game delete form on POST.
 exports.game_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Game delete POST");
+  // Get details of game.
+  const game = await Game.findById(req.params.id).exec();
+
+  // Delete game and redirect to the list of games.
+  await Game.findByIdAndDelete(req.body.gameid);
+  res.redirect("/inventory/games");
 });
 
 // Display Game update form on GET.
