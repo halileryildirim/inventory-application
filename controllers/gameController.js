@@ -95,7 +95,8 @@ exports.game_create_post = [
       description: req.body.description,
       release_year: req.body.release_year,
       platform: req.body.platform,
-      category: req.body.category,
+      category:
+        typeof req.body.category === "undefined" ? [] : req.body.category,
     });
 
     if (!errors.isEmpty()) {
@@ -152,10 +153,100 @@ exports.game_delete_post = asyncHandler(async (req, res, next) => {
 
 // Display Game update form on GET.
 exports.game_update_get = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Game update GET");
+  // Get game and categories for form.
+  const [game, allCategories] = await Promise.all([
+    Game.findById(req.params.id).exec(),
+    Category.find().sort({ name: 1 }).exec(),
+  ]);
+
+  if (game === null) {
+    // No results.
+    const err = new Error("Game not found.");
+    err.status = 404;
+    return next(err);
+  }
+
+  // Mark selected categories as checked.
+  allCategories.forEach((category) => {
+    if (game.category.includes(category._id)) {
+      category.checked = "true";
+    }
+  });
+
+  res.render("layout", {
+    content: "game_form",
+    title: "Update Game",
+    game: game,
+    categories: allCategories,
+  });
 });
 
 // Display Game update form on POST.
-exports.game_update_post = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Game update POST");
-});
+exports.game_update_post = [
+  // Convert the category to an array.
+  (req, res, next) => {
+    if (!Array.isArray(req.body.category)) {
+      req.body.category =
+        typeof req.body.category === "undefined" ? [] : [req.body.category];
+    }
+    next();
+  },
+
+  // Validate and sanitize fields.
+  body("name", "Name must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("description", "Description must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("release_year", "Invalid Date")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+  body("platform").escape(),
+  body("category.*").escape(),
+
+  // Process request after validation and sanitization.
+  asyncHandler(async (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a game object with escaped/trimmed data and old id.
+    const game = new Game({
+      name: req.body.name,
+      description: req.body.description,
+      release_year: req.body.release_year,
+      platform: req.body.platform,
+      category:
+        typeof req.body.category === "undefined" ? [] : req.body.category,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values and error messages.
+
+      // Get all categories for form.
+      const allCategories = await Category.find().sort({ name: 1 }).exec();
+
+      // Mark our categories as checked.
+      for (const category of allCategories) {
+        if (game.category.indexOf(category._id) > -1) {
+          category.checked = "true";
+        }
+      }
+
+      res.render("layout", {
+        content: "game_form",
+        title: "Update Game",
+        categories: allCategories,
+        game: game,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      // Data from form is valid. Update the record.
+      const updatedGame = await Game.findByIdAndUpdate(req.params.id, game, {});
+      // Redirect to game detail page.
+      res.redirect(updatedGame.url);
+    }
+  }),
+];

@@ -9,11 +9,11 @@
     </div>
     <div class="form-group">
         <label for="description">Description: </label>
-        <textarea id="description" class="form-control" placeholder="Description" name="description" required value="<%= typeof game === 'undefined' ? '' : game.description %>"></textarea>
+        <textarea id="description" class="form-control" placeholder="Description" name="description" required><%= typeof game==='undefined' ? '' : game.description %></textarea>
     </div>
     <div class="form-group">
         <label for="release_year">Release date of Game: </label>
-        <input id="release_year" class="form-control" type="date" name="release_year" required value="<%= typeof game === "undefined" ? "" : game.release_year_formatted %>">
+        <input id="release_year" class="form-control" type="date" name="release_year" required value="<%= typeof game === "undefined" ? "" : game.release_year_yyyy_mm_dd %>">
     </div>
     <div class="form-group">
         <label for="platform">Platform: </label>
