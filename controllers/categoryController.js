@@ -138,10 +138,59 @@ exports.category_delete_post = asyncHandler(async (req, res, next) => {
 
 // Display Category update form on GET.
 exports.category_update_get = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Category update GET");
+  // Get category for form.
+  const category = await Category.findById(req.params.id).exec();
+
+  if (category === null) {
+    // No results.
+    const err = new Error("Category not found.");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("layout", {
+    content: "category_form",
+    title: "Update Category",
+    category: category,
+  });
 });
 
 // Display Category update form on POST.
-exports.category_update_post = asyncHandler(async (req, res, next) => {
-  res.send("TBA: Category update POST");
-});
+exports.category_update_post = [
+  // Validate and sanitize fields.
+  body("name", "Category name must contain at least 3 characters")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+
+  // Process request after validation and sanitization.
+  asyncHandler(async (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a category object with escaped and trimmed data and old id.
+    const category = new Category({
+      name: req.body.name,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values and error messages.
+
+      res.render("layout", {
+        content: "category_form",
+        title: "Update Category",
+        category: category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      // Data from form is valid. Update the record.
+      const updatedCategory = await Category.findByIdAndUpdate(
+        req.params.id,
+        category
+      );
+      res.redirect(updatedCategory.url);
+    }
+  }),
+];
